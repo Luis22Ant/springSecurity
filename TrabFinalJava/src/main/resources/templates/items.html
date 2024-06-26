@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Locais</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+<div th:replace="navbar :: navbar"></div>
+
+<div class="container">
+    <h1>Lista de Locais</h1>
+
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Botão para abrir o modal -->
+    <div th:if="${isAdminOrEmpregado}">
+        <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalNovoLocal">
+            Adicionar Novo Local
+        </button>
+    </div>
+
+    <!-- Modal para adicionar novo local -->
+    <div class="modal fade" id="modalNovoLocal" tabindex="-1" role="dialog" aria-labelledby="modalNovoLocalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalNovoLocalLabel">Adicionar Novo Local</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário para adicionar novo local -->
+                    <form th:action="@{/items/new}" method="post">
+                        <div class="form-group">
+                            <label for="nomeNovoLocal">Nome do Local:</label>
+                            <i<!DOCTYPE html>
+                            <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+                            <head>
+                                <meta charset="UTF-8">
+                                <title>Lista de Locais</title>
+                                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+                            </head>
+
+                            <body>
+                            <div th:replace="navbar :: navbar"></div>
+
+                            <div class="container">
+                                <h1>Lista de Locais</h1>
+
+                                <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                                    <span th:text="${successMessage}"></span>
+                                </div>
+                                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                                    <span th:text="${errorMessage}"></span>
+                                </div>
+
+                                <!-- Botão para abrir o modal -->
+                                <div th:if="${isAdminOrEmpregado}">
+                                    <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalNovoLocal">
+                                        Adicionar Novo Local
+                                    </button>
+                                </div>
+
+                                <!-- Modal para adicionar novo local -->
+                                <div class="modal fade" id="modalNovoLocal" tabindex="-1" role="dialog" aria-labelledby="modalNovoLocalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalNovoLocalLabel">Adicionar Novo Local</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Formulário para adicionar novo local -->
+                                                <form th:action="@{/items/new}" method="post">
+                                                    <div class="form-group">
+                                                        <label for="nomeNovoLocal">Nome do Local:</label>
+                                                        <input type="text" class="form-control" id="nomeNovoLocal" name="nome" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">Ações</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="item : ${items}">
+                                        <td th:text="${item.nome}"></td>
+                                        <td>
+                                            <div th:if="${isAdminOrEmpregado}">
+                                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                                        th:data-target="'#modalEditarItem-' + ${item.id}">
+                                                    Editar
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                        th:data-target="'#modalConfirmarExclusao-' + ${item.id}">
+                                                    Excluir
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                        th:data-target="'#modalReservasItem-' + ${item.id}">
+                                                    Visualizar Reservas
+                                                </button>
+                                            </div>
+                                            <div th:unless="${isAdminOrEmpregado}">
+                                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                                                        th:data-target="'#modalSelecionarDiaReserva-' + ${item.id}">
+                                                    Reservar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Modal de Edição de Item -->
+                            <div th:each="item : ${items}">
+                                <div class="modal fade" th:id="'modalEditarItem-' + ${item.id}" tabindex="-1" role="dialog"
+                                     aria-labelledby="modalEditarItemLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" th:text="'Editar ' + ${item.nome}" id="modalEditarItemLabel"></h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Formulário de edição de item -->
+                                                <form th:action="@{'/items/' + ${item.id} + '/edit'}" method="post">
+                                                    <div class="form-group">
+                                                        <label for="nomeEditarItem">Nome do Item:</label>
+                                                        <input type="text" class="form-control" id="nomeEditarItem" name="nome" th:value="${item.nome}" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Modal de Reservas por Item -->
+                            <div th:each="item : ${items}">
+                                <div class="modal fade" th:id="'modalReservasItem-' + ${item.id}" tabindex="-1" role="dialog"
+                                     aria-labelledby="modalReservasItemLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" th:text="'Reservas para o item ' + ${item.nome}" id="modalReservasItemLabel"></h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Lista de reservas para o item -->
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">Usuário</th>
+                                                        <th scope="col">Dia da Reserva</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <!-- Loop para listar as reservas do item -->
+                                                    <tr th:each="reserva : ${item.reservas}">
+                                                        <td th:text="${reserva.membro.username}"></td>
+                                                        <td th:text="${reserva.data}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal de confirmação de exclusão -->
+                            <div th:each="item : ${items}">
+                                <div class="modal fade" th:id="'modalConfirmarExclusao-' + ${item.id}" tabindex="-1" role="dialog"
+                                     aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalConfirmarExclusaoLabel">Confirmar Exclusão</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Deseja realmente excluir o item <strong th:text="${item.nome}"></strong>?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form th:action="@{'/items/' + ${item.id} + '/delete'}" method="post">
+                                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                                </form>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal para selecionar o dia da reserva -->
+                            <div th:each="item : ${items}">
+                                <div class="modal fade" th:id="'modalSelecionarDiaReserva-' + ${item.id}" tabindex="-1" role="dialog"
+                                     aria-labelledby="modalSelecionarDiaReservaLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalSelecionarDiaReservaLabel">Selecionar Dia da Reserva</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div th:unless="${isAdminOrEmpregado}" class="modal-body">
+                                                <!-- Formulário para selecionar o dia da reserva -->
+                                                <form th:action="@{'/reservas/' + ${item.id} + '/reserve'}" method="post">
+                                                    <div class="form-group">
+                                                        <label for="diaReserva">Selecione o Dia:</label>
+                                                        <input type="date" class="form-control" id="diaReserva" name="diaReserva" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-success">Reservar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seção para visualização de reservas do usuário -->
+                            <div th:unless="${isAdminOrEmpregado}">
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReservasUsuario">
+                                        Minhas Reservas
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Modal de Reservas do Usuário -->
+                            <div class="modal fade" id="modalReservasUsuario" tabindex="-1" role="dialog" aria-labelledby="modalReservasUsuarioLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalReservasUsuarioLabel">Minhas Reservas</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Nome do Local</th>
+                                                    <th scope="col">Dia da Reserva</th>
+                                                    <th scope="col">Ações</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="reserva : ${reservasDoUsuario}">
+                                                    <td th:text="${reserva.item.nome}"></td>
+                                                    <td th:text="${reserva.data}"></td>
+                                                    <td>
+                                                        <a th:href="@{/editar-reserva/{id}(id=${reserva.id})}" class="btn btn-primary btn-sm">Editar</a>
+                                                        <a th:href="@{/remover-reserva/{id}(id=${reserva.id})}" class="btn btn-danger btn-sm">Remover</a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- JavaScript para o Bootstrap -->
+                            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+                            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+                            </body>
+                            </html>
+                            nput type="text" class="form-control" id="nomeNovoLocal" name="nome" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.nome}"></td>
+            <td>
+                <div th:if="${isAdminOrEmpregado}">
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                            th:data-target="'#modalEditarItem-' + ${item.id}">
+                        Editar
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            th:data-target="'#modalConfirmarExclusao-' + ${item.id}">
+                        Excluir
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                            th:data-target="'#modalReservasItem-' + ${item.id}">
+                        Visualizar Reservas
+                    </button>
+                </div>
+                <div th:unless="${isAdminOrEmpregado}">
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                            th:data-target="'#modalSelecionarDiaReserva-' + ${item.id}">
+                        Reservar
+                    </button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal de Edição de Item -->
+<div th:each="item : ${items}">
+    <div class="modal fade" th:id="'modalEditarItem-' + ${item.id}" tabindex="-1" role="dialog"
+         aria-labelledby="modalEditarItemLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="'Editar ' + ${item.nome}" id="modalEditarItemLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário de edição de item -->
+                    <form th:action="@{'/items/' + ${item.id} + '/edit'}" method="post">
+                        <div class="form-group">
+                            <label for="nomeEditarItem">Nome do Item:</label>
+                            <input type="text" class="form-control" id="nomeEditarItem" name="nome" th:value="${item.nome}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Reservas por Item -->
+<div th:each="item : ${items}">
+    <div class="modal fade" th:id="'modalReservasItem-' + ${item.id}" tabindex="-1" role="dialog"
+         aria-labelledby="modalReservasItemLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="'Reservas para o item ' + ${item.nome}" id="modalReservasItemLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Lista de reservas para o item -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Usuário</th>
+                            <th scope="col">Dia da Reserva</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Loop para listar as reservas do item -->
+                        <tr th:each="reserva : ${item.reservas}">
+                            <td th:text="${reserva.membro.username}"></td>
+                            <td th:text="${reserva.data}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmação de exclusão -->
+<div th:each="item : ${items}">
+    <div class="modal fade" th:id="'modalConfirmarExclusao-' + ${item.id}" tabindex="-1" role="dialog"
+         aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmarExclusaoLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja realmente excluir o item <strong th:text="${item.nome}"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <form th:action="@{'/items/' + ${item.id} + '/delete'}" method="post">
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para selecionar o dia da reserva -->
+<div th:each="item : ${items}">
+    <div class="modal fade" th:id="'modalSelecionarDiaReserva-' + ${item.id}" tabindex="-1" role="dialog"
+         aria-labelledby="modalSelecionarDiaReservaLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalSelecionarDiaReservaLabel">Selecionar Dia da Reserva</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:unless="${isAdminOrEmpregado}" class="modal-body">
+                    <!-- Formulário para selecionar o dia da reserva -->
+                    <form th:action="@{'/reservas/' + ${item.id} + '/reserve'}" method="post">
+                        <div class="form-group">
+                            <label for="diaReserva">Selecione o Dia:</label>
+                            <input type="date" class="form-control" id="diaReserva" name="diaReserva" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Reservar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção para visualização de reservas do usuário -->
+<div th:unless="${isAdminOrEmpregado}">
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReservasUsuario">
+            Minhas Reservas
+        </button>
+    </div>
+</div>
+
+<!-- Modal de Reservas do Usuário -->
+<div class="modal fade" id="modalReservasUsuario" tabindex="-1" role="dialog" aria-labelledby="modalReservasUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalReservasUsuarioLabel">Minhas Reservas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Nome do Local</th>
+                        <th scope="col">Dia da Reserva</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reserva : ${reservasDoUsuario}">
+                        <td th:text="${reserva.item.nome}"></td>
+                        <td th:text="${reserva.data}"></td>
+                        <td>
+                            <a th:href="@{/editar-reserva/{id}(id=${reserva.id})}" class="btn btn-primary btn-sm">Editar</a>
+                            <a th:href="@{/remover-reserva/{id}(id=${reserva.id})}" class="btn btn-danger btn-sm">Remover</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para o Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

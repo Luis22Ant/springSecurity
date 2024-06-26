@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .jumbotron {
+            background-color: #f8f9fa; 
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 0.3rem;
+        }
+
+        .jumbotron h1 {
+            font-size: 3.5rem;
+        }
+
+        .lead {
+            font-size: 1.5rem;
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+        }
+
+        .help-section {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="navbar :: navbar"></div>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Bem-vindo!</h1>
+        <p class="lead">Aqui você pode gerenciar suas reservas de locais e visualizar informações importantes.</p>
+        <hr class="my-4">
+        <p>Veja abaixo algumas das ações que você pode realizar:</p>
+        <a class="btn btn-primary btn-lg" href="/items" role="button">Ver Locais Disponíveis</a>
+    </div>
+
+    <div class="row help-section">
+        <div class="col-md-6">
+            <h3>Instruções e Ajuda</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>Como reservar um local:</strong> Acesse a página de locais disponíveis e escolha um para
+                    reservar.
+                </li>
+                <li class="list-group-item">
+                    <strong>Como cancelar uma reserva:</strong> Acesse suas reservas e clique em "Cancelar Reserva" ao
+                    lado da reserva que deseja cancelar.
+                </li>
+                <li class="list-group-item">
+                    <strong>Precisa de ajuda?</strong> Entre em contato com o suporte através do e-mail
+                    suporte@example.com.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para o Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

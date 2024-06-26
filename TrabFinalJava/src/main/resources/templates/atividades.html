@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Atividades</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+<div th:replace="navbar :: navbar"></div>
+
+<div class="container">
+    <h1>Lista de Atividades</h1>
+
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Botão para abrir o modal de adicionar nova atividade -->
+    <div th:if="${isAdminOrEmpregado}">
+        <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalNovaAtividade">
+            Adicionar Nova Atividade
+        </button>
+    </div>
+
+    <!-- Modal para adicionar nova atividade -->
+    <div class="modal fade" id="modalNovaAtividade" tabindex="-1" role="dialog" aria-labelledby="modalNovaAtividadeLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalNovaAtividadeLabel">Adicionar Nova Atividade</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário para adicionar nova atividade -->
+                    <form th:action="@{/atividades/new}" method="post">
+                        <div class="form-group">
+                            <label for="tituloNovaAtividade">Título da Atividade:</label>
+                            <input type="text" class="form-control" id="tituloNovaAtividade" name="titulo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="instrutorId">Instrutor:</label>
+                            <select class="form-control" id="instrutorId" name="instrutorId" required>
+                                <option th:each="instrutor : ${instrutores}" th:value="${instrutor.id}" th:text="${instrutor.username}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataHoraAtividade">Data e Hora:</label>
+                            <input type="datetime-local" class="form-control" id="dataHoraAtividade" name="dataHora" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Título</th>
+            <th scope="col">Instrutor</th>
+            <th scope="col">Data e Hora</th>
+            <th scope="col">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="atividade : ${atividades}">
+            <td th:text="${atividade.titulo}"></td>
+            <td th:text="${atividade.instrutor.username}"></td>
+            <td th:text="${atividade.dataHora}"></td>
+            <td>
+                <div th:if="${isAdminOrEmpregado}">
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                            th:data-target="'#modalEditarAtividade-' + ${atividade.id}">
+                        Editar
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            th:data-target="'#modalConfirmarExclusao-' + ${atividade.id}">
+                        Excluir
+                    </button>
+                </div>
+                <div th:unless="${isAdminOrEmpregado}">
+                    <form th:action="@{/atividades/inscrever}" method="post" style="display: inline;">
+                        <input type="hidden" name="atividadeId" th:value="${atividade.id}"/>
+                        <button type="submit" class="btn btn-info btn-sm">Inscrever</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:each="atividade : ${atividades}">
+    <div class="modal fade" th:id="'modalEditarAtividade-' + ${atividade.id}" tabindex="-1" role="dialog"
+         aria-labelledby="modalEditarAtividadeLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="'Editar ' + ${atividade.titulo}" id="modalEditarAtividadeLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário de edição de atividade -->
+                    <form th:action="@{'/atividades/' + ${atividade.id} + '/edit'}" method="post">
+                        <div class="form-group">
+                            <label for="tituloEditarAtividade">Título da Atividade:</label>
+                            <input type="text" class="form-control" id="tituloEditarAtividade" name="titulo" th:value="${atividade.titulo}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="instrutorIdEditar">Instrutor:</label>
+                            <select class="form-control" id="instrutorIdEditar" name="instrutorId" required>
+                                <option th:each="instrutor : ${instrutores}" th:value="${instrutor.id}" th:selected="${instrutor.id} == ${atividade.instrutor.id}" th:text="${instrutor.username}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataHoraEditar">Data e Hora:</label>
+                            <input type="datetime-local" class="form-control" id="dataHoraEditar" name="dataHora" th:value="${atividade.dataHora}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmação de exclusão -->
+<div th:each="atividade : ${atividades}">
+    <div class="modal fade" th:id="'modalConfirmarExclusao-' + ${atividade.id}" tabindex="-1" role="dialog"
+         aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmarExclusaoLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja realmente excluir a atividade <strong th:text="${atividade.titulo}"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <form th:action="@{'/atividades/' + ${atividade.id} + '/delete'}" method="post">
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para o Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

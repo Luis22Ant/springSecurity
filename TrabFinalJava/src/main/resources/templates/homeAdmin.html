@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="navbar :: navbar"></div>
+<div style="padding: 10px">
+    <h1>Dashboard</h1>
+    <!-- Formulário de Pesquisa -->
+    <form class="form-inline mb-3" th:action="@{/homeAdmin}" method="get">
+        <input class="form-control mr-sm-2" type="search" placeholder="Pesquisar por Username"
+               aria-label="Search" name="search">
+        <select class="form-control mr-sm-2" name="role">
+            <option value="">Filtrar por Role</option>
+            <option value="ADMIN">Admin</option>
+            <option value="EMPREGADO">Empregado</option>
+            <option value="USUARIO">Usuário</option>
+        </select>
+        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Buscar</button>
+        <button class="btn btn-outline-danger my-2 my-sm-0 ml-2" type="button" onclick="limparFiltros()">Limpar Filtros</button>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Pagamento em dia</th>
+            <th>Role</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usuario : ${usuarios}">
+            <td th:text="${usuario.username}"></td>
+            <td th:text="${usuario.ativo ? 'Sim' : 'Não'}"></td>
+            <td th:text="${usuario.role}"></td>
+            <td>
+                <button type="button" class="btn btn-primary" data-toggle="modal" th:data-target="'#editarModal' + ${usuario.id}">Editar</button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" th:data-target="'#confirmarModal' + ${usuario.id}">Deletar</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#adicionarModal">Adicionar Usuário
+    </button>
+
+    <!-- Modal para adicionar um novo usuário -->
+    <div class="modal fade" id="adicionarModal" tabindex="-1" role="dialog" aria-labelledby="adicionarModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adicionarModalLabel">Adicionar Novo Usuário</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/adicionarUsuario}" method="post">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="text" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ativo">Pagamento em dia</label>
+                            <input type="checkbox" class="form-control" id="ativo" name="ativo">
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select class="form-control" id="role" name="role" required>
+                                <option value="ADMIN">Admin</option>
+                                <option value="EMPREGADO">Empregado</option>
+                                <option value="USUARIO">Usuário</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar Usuário</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:each="usuario : ${usuarios}">
+        <!-- Modal para Editar -->
+        <div class="modal fade" th:id="'editarModal' + ${usuario.id}" tabindex="-1" role="dialog"
+             aria-labelledby="editarModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarModalLabel">Editar Usuário: <span
+                                th:text="${usuario.username}"></span></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/editarUsuario}" method="post">
+                            <input type="hidden" th:name="id" th:value="${usuario.id}">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                       th:value="${usuario.username}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="text" class="form-control" id="password" name="password"
+                                       th:value="${usuario.password}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ativo">Pagamento em dia</label>
+                                <input type="checkbox" class="form-control" id="ativo" name="ativo"
+                                       th:checked="${usuario.ativo}">
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select class="form-control" id="role" name="role" required>
+                                    <option th:value="'ADMIN'" th:selected="${usuario.role == 'ADMIN'}">Admin</option>
+                                    <option th:value="'EMPREGADO'" th:selected="${usuario.role == 'EMPREGADO'}">
+                                        Empregado
+                                    </option>
+                                    <option th:value="'USUARIO'" th:selected="${usuario.role == 'USUARIO'}">Usuário
+                                    </option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Confirmar Deleção -->
+        <div class="modal fade" th:id="'confirmarModal' + ${usuario.id}" tabindex="-1" role="dialog"
+             aria-labelledby="confirmarModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmarModalLabel">Confirmar Deleção do Usuário: <span
+                                th:text="${usuario.username}"></span></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Deseja realmente deletar o usuário <strong th:text="${usuario.username}"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <a th:href="@{/deletarUsuario/{id}(id=${usuario.id})}" class="btn btn-danger">Deletar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script th:inline="javascript">
+        function limparFiltros() {
+            document.querySelector('input[name="search"]').value = ''; // Limpa o campo de pesquisa
+            document.querySelector('select[name="role"]').value = ''; // Limpa o campo de role
+            document.querySelector('form').submit(); // Submete o formulário para aplicar os filtros limpos
+        }
+    </script>
+</div>
+</body>
+</html>
