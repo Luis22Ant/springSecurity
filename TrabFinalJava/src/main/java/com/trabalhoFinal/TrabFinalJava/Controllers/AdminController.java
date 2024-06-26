@@ -19,27 +19,32 @@ public class AdminController {
     @Autowired
     private UsuarioService usuarioService;
 
+//    @GetMapping("/homeAdmin")
+//    public String adminHome(@RequestParam(name = "search", required = false) String searchUsername,
+//                            @RequestParam(name = "role", required = false) ETipoUser searchRole,
+//                            HttpSession session, Model model) {
+//        Usuario usuario = (Usuario) session.getAttribute("usuario");
+//        if (usuario == null || !ETipoUser.ADMIN.equals(usuario.getRole())) {
+//            return "redirect:/login";
+//        }
+//
+//        List<Usuario> usuarios;
+//        if (searchUsername != null && !searchUsername.isEmpty()) {
+//            usuarios = usuarioService.findByUsernameContaining(searchUsername);
+//        } else if (searchRole != null) {
+//            usuarios = usuarioService.findByRole(searchRole);
+//        } else {
+//            usuarios = usuarioService.getAllUsuarios();
+//        }
+//
+//        System.out.println("Número de usuários após filtro: " + usuarios.size());
+//        model.addAttribute("usuarios", usuarios);
+//        return "homeAdmin";
+//    }
+
     @GetMapping("/homeAdmin")
-    public String adminHome(@RequestParam(name = "search", required = false) String searchUsername,
-                            @RequestParam(name = "role", required = false) ETipoUser searchRole,
-                            HttpSession session, Model model) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if (usuario == null || !ETipoUser.ADMIN.equals(usuario.getRole())) {
-            return "redirect:/login";
-        }
-
-        List<Usuario> usuarios;
-        if (searchUsername != null && !searchUsername.isEmpty()) {
-            usuarios = usuarioService.findByUsernameContaining(searchUsername);
-        } else if (searchRole != null) {
-            usuarios = usuarioService.findByRole(searchRole);
-        } else {
-            usuarios = usuarioService.getAllUsuarios();
-        }
-
-        System.out.println("Número de usuários após filtro: " + usuarios.size());
-        model.addAttribute("usuarios", usuarios);
-        return "homeAdmin";
+    public String homeAdmin(){
+        return "redirect:/homeAdmin";
     }
 
 

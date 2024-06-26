@@ -18,17 +18,22 @@ public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
     @Getter
-    Usuario usuario = new Usuario();
+    private Usuario user;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = usuarioRepository.findByUsername(username);
-        this.usuario = user;
-        if(user != null){
+
+        this.user = user;
+
+        if (user != null) {
             return new UserSecurityDetails(user);
+        } else {
+            throw new UsernameNotFoundException("usuário não encontrado");
         }
-        return null;
+
     }
 
     public List<Usuario> getAllUsuarios() {

@@ -5,33 +5,50 @@ import com.trabalhoFinal.TrabFinalJava.Enums.ETipoUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class UserSecurityDetails implements UserDetails {
 
-    Usuario user = new Usuario();
+    private Usuario user;
 
     public UserSecurityDetails(Usuario user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (this.user.getRole() == ETipoUser.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMINISTRADOR"),
+                    new SimpleGrantedAuthority("ROLE_EMPREGADO"),
+                    new SimpleGrantedAuthority("ROLE_USUARIO"));
+        } else if (this.user.getRole() == ETipoUser.EMPREGADO) {
+            return List.of(new SimpleGrantedAuthority("ROLE_EMPREGADO"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_USUARIO"));
+        }
+    }
+
+    public Usuario getUser() {
+        return user;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return new BCryptPasswordEncoder().encode(user.getPassword());
     }
 
     @Override
     public String getUsername() {
         return user.getUsername();
+    }
+
+    public String getTipoUserString() {
+        return user.getRole().toString();
     }
 
     @Override
